@@ -12,7 +12,7 @@
 <style>
 :root{color-scheme:light dark;--pri:#2563eb;--bg:#eef2f9;--glow:#d6e4ff;--card:#fff;--line:#e3e8f0;--txt:#0f172a;--mut:#64748b;--soft:#f1f5f9;--th:#f8fafc;--hov:#f5f9ff;--selbg:#eaf1ff;--go:#16a34a;--lv:#2563eb;--ab:#dc2626;--in:#d97706;--r:16px;--sh:0 1px 2px rgba(15,23,42,.05),0 10px 28px -14px rgba(15,23,42,.18);--hd:linear-gradient(120deg,#2456e6,#3b82f6 60%,#4f9bff)}
 @media(prefers-color-scheme:dark){:root{--pri:#60a5fa;--bg:#0b1220;--glow:#14264d;--card:#131c2e;--line:#243049;--txt:#e6edf7;--mut:#93a3bb;--soft:#1b2740;--th:#162036;--hov:#18243b;--selbg:#1b2c52;--go:#22c55e;--lv:#3b82f6;--ab:#ef4444;--in:#f59e0b;--sh:0 1px 2px rgba(0,0,0,.3),0 10px 28px -14px rgba(0,0,0,.6);--hd:linear-gradient(120deg,#1e3a8a,#2563eb 70%,#3b82f6)}}
-:root{--tv:#7c3aed}@media(prefers-color-scheme:dark){:root{--tv:#a78bfa}}
+:root{--tv:#7c3aed;--wk:#0891b2}@media(prefers-color-scheme:dark){:root{--tv:#a78bfa;--wk:#22d3ee}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;color:var(--txt);font:15px/1.45 "Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,"Malgun Gothic",Arial,sans-serif}
 body{background:radial-gradient(1100px 380px at 50% -120px,var(--glow),transparent),var(--bg);min-height:100vh}
@@ -59,15 +59,15 @@ input:focus,select:focus{outline:3px solid color-mix(in srgb,var(--pri) 30%,tran
 .emp{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:var(--sh)}
 .emp.hide{display:none}
 .emp:has(.on[data-st="Đi làm"]){border-left-color:var(--go)}.emp:has(.on[data-st="Phép năm"]){border-left-color:var(--lv)}
-.emp:has(.on[data-st="Không phép"]){border-left-color:var(--ab)}.emp:has(.on[data-st="Nghỉ bảo hiểm"]){border-left-color:var(--in)}.emp:has(.on[data-st="Thôi việc"]){border-left-color:var(--tv)}
+.emp:has(.on[data-st="Không phép"]){border-left-color:var(--ab)}.emp:has(.on[data-st="Nghỉ bảo hiểm"]){border-left-color:var(--in)}.emp:has(.on[data-st="Thôi việc"]){border-left-color:var(--tv)}.emp:has(.on[data-st="Nghỉ cuối tuần"]){border-left-color:var(--wk)}
 .emp .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .emp .nm{font-weight:600}.emp .id{font-size:12px;color:var(--mut);margin-left:4px}
 .emp .tag{font-size:11px;padding:2px 8px;border-radius:99px;background:var(--soft);color:var(--mut)}
-.sts{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:11px}
+.sts{display:grid;grid-template-columns:repeat(var(--n,6),1fr);gap:6px;margin-top:11px}
 .sts button{padding:10px 2px;font-size:13px;font-weight:500;border:1.5px solid var(--line);border-radius:11px;background:var(--card);color:var(--txt);line-height:1.15;transition:.12s}
 .sts button.on{color:#fff;font-weight:700;box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}
 .sts button.on[data-st="Đi làm"]{background:var(--go);border-color:var(--go)}.sts button.on[data-st="Phép năm"]{background:var(--lv);border-color:var(--lv)}
-.sts button.on[data-st="Không phép"]{background:var(--ab);border-color:var(--ab)}.sts button.on[data-st="Nghỉ bảo hiểm"]{background:var(--in);border-color:var(--in)}.sts button.on[data-st="Thôi việc"]{background:var(--tv);border-color:var(--tv)}
+.sts button.on[data-st="Không phép"]{background:var(--ab);border-color:var(--ab)}.sts button.on[data-st="Nghỉ bảo hiểm"]{background:var(--in);border-color:var(--in)}.sts button.on[data-st="Thôi việc"]{background:var(--tv);border-color:var(--tv)}.sts button.on[data-st="Nghỉ cuối tuần"]{background:var(--wk);border-color:var(--wk)}
 .sts button:disabled,.rs button:disabled{opacity:.55}
 .rs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.rs button{padding:8px 13px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;font-size:14px;color:var(--txt)}
 .rs button.on{background:var(--selbg);border-color:var(--pri);color:var(--pri);font-weight:700}
@@ -106,6 +106,7 @@ tr.tot td{font-weight:700;background:var(--th);position:sticky;bottom:0}
 .p2{background:color-mix(in srgb,var(--ab) 17%,transparent);color:color-mix(in srgb,var(--ab) 78%,var(--txt))}
 .p3{background:color-mix(in srgb,var(--in) 18%,transparent);color:color-mix(in srgb,var(--in) 78%,var(--txt))}
 .p4{background:var(--soft);color:var(--mut)}
+.p6{background:color-mix(in srgb,var(--wk) 17%,transparent);color:color-mix(in srgb,var(--wk) 78%,var(--txt))}
 .p5{background:color-mix(in srgb,var(--tv) 17%,transparent);color:color-mix(in srgb,var(--tv) 78%,var(--txt))}
 .rp{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,560px),1fr));gap:14px}
 .rpc{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);padding:12px;min-width:0}
@@ -262,7 +263,22 @@ body[data-tab="rep"] main{padding-bottom:16px}
   #v-hr #sq{min-width:180px}
 }
 
+@media(max-width:420px){.sts{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.sts{gap:4px}.sts button{font-size:10.5px;letter-spacing:-.2px;padding:5px 1px}}
+/* ===== Tổng quan: gọn, xem đủ 5 biểu đồ trong một màn hình ===== */
+.g3{gap:8px;margin-bottom:10px}
+.g3 .card{padding:8px 10px}
+.g3 .card h3{font-size:11px;margin-bottom:2px}
+#v-rep .g3 .cv{height:170px}
+@media(min-width:700px){
+  .g3{grid-template-columns:repeat(6,1fr)}
+  .g3>.card,.g3>.card:first-child{grid-column:span 3}
+  #v-rep .g3 .cv{height:clamp(140px,calc((100vh - 340px)/2),230px)}
+}
+@media(min-width:1100px){
+  .g3>.card,.g3>.card:first-child{grid-column:span 2}
+  .g3>.card:nth-child(4){grid-column:span 4}
+}
 </style>
 </head>
 <body data-tab="login">
@@ -343,11 +359,9 @@ body[data-tab="rep"] main{padding-bottom:16px}
     <div class="g3">
       <div class="card"><h3>Theo ngày</h3><div class="cv"><canvas id="c1"></canvas></div></div>
       <div class="card"><h3>Tỷ trọng trạng thái</h3><div class="cv"><canvas id="c3"></canvas></div></div>
-      <div class="card"><h3>Theo Line</h3><div class="cv sc"><div id="c2w"><canvas id="c2"></canvas></div></div></div>
-    </div>
-    <div class="g2">
       <div class="card"><h3>Công nhân: chính thức / thời vụ</h3><div class="cv"><canvas id="c4"></canvas></div></div>
-      <div class="card"><h3>Công nhân theo thâm niên</h3><div class="cv"><canvas id="c5"></canvas></div><div class="mut" id="c5n" style="margin-top:6px"></div></div>
+      <div class="card"><h3>Theo Line</h3><div class="cv sc"><div id="c2w"><canvas id="c2"></canvas></div></div></div>
+      <div class="card"><h3>Công nhân theo thâm niên</h3><div class="cv"><canvas id="c5"></canvas></div><div class="mut" id="c5n" style="margin-top:2px;font-size:11px"></div></div>
     </div>
     <div class="g2">
       <div class="card"><h3>Báo cáo theo ca</h3><div class="tw" id="tShift"></div></div>
@@ -363,7 +377,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
       <section id="t2" class="hide"><div class="card">
     <div class="row" style="margin-bottom:8px"><input type="search" id="aq" placeholder="Tìm tên, ID, Line, lý do">
       <button class="q on" data-s="">Tất cả</button><button class="q" data-s="Phép năm">Phép năm</button>
-      <button class="q" data-s="Không phép">Không phép</button><button class="q" data-s="Nghỉ bảo hiểm">Bảo hiểm</button><button class="q" data-s="Thôi việc">Thôi việc</button></div>
+      <button class="q" data-s="Không phép">Không phép</button><button class="q" data-s="Nghỉ bảo hiểm">Bảo hiểm</button><button class="q" data-s="Thôi việc">Thôi việc</button><button class="q" data-s="Nghỉ cuối tuần">Cuối tuần</button></div>
     <div class="mut" id="acnt"></div><div class="tw" style="max-height:68vh" id="tAbs"></div>
     <button class="q hide" id="more" style="margin-top:8px">Xem thêm</button>
   </div></section>
@@ -375,7 +389,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
         <input type="search" id="sq" class="grow" placeholder="Tìm tên, ID, Bộ phận, Line, Công việc">
         <div class="seg2"><button class="q on" data-h="">Cả hai ca</button><button class="q" data-h="Day">Ca ngày</button><button class="q" data-h="Night">Ca đêm</button></div>
       </div>
-      <div class="row hide" id="sf" style="margin-top:12px"><button class="q on" data-f="">Tất cả</button><button class="q" data-f="Đi làm">Đi làm</button><button class="q" data-f="Phép năm">Phép năm</button><button class="q" data-f="Không phép">Không phép</button><button class="q" data-f="Nghỉ bảo hiểm">Bảo hiểm</button><button class="q" data-f="Thôi việc">Thôi việc</button><button class="q" data-f="Chưa điểm danh">Chưa điểm danh</button></div>
+      <div class="row hide" id="sf" style="margin-top:12px"><button class="q on" data-f="">Tất cả</button><button class="q" data-f="Đi làm">Đi làm</button><button class="q" data-f="Phép năm">Phép năm</button><button class="q" data-f="Không phép">Không phép</button><button class="q" data-f="Nghỉ bảo hiểm">Bảo hiểm</button><button class="q" data-f="Thôi việc">Thôi việc</button><button class="q" data-f="Nghỉ cuối tuần">Cuối tuần</button><button class="q" data-f="Chưa điểm danh">Chưa điểm danh</button></div>
       <div class="row hide" id="lvy" style="margin-top:12px"><button class="q" id="yPrev">‹</button><b id="yTxt"></b><button class="q" id="yNext">›</button><span class="mut">Số ngày "Phép năm" đã dùng theo từng tháng, tính từ dữ liệu điểm danh</span></div>
       <div class="row" id="sk" style="margin-top:12px"></div></div>
       <div id="sMsg"></div><div class="card"><div class="hd2"><div class="mut" id="scnt"></div><button class="q" id="dl" title="Tải xuống nội dung đang xem (Excel)"><svg class="ic" viewBox="0 0 24 24" style="width:14px;height:14px;vertical-align:-2px"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg> Tải xuống</button></div><div class="tw" style="max-height:68vh" id="tStaff"></div></div>
@@ -391,7 +405,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
 
 <script>
 /* Địa chỉ Web App (Apps Script, kết thúc /exec) dùng chung cho cả 3 tab */
-const API_URL = "https://script.google.com/macros/s/AKfycbyim9np4xZdKJO_o2X42BfGFPFQ8vVr4byFTIICirzvbp7_VhGyy6xXetMCFMUXk4b3QQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycby73tdDWEZ_NIOnPxyNk-ubpbKp0i7CMr6MjGVlhuX4OoKzQz-3bNqdjyLlfGFHyoZFjQ/exec";
 const $ = id => document.getElementById(id);
 let curTab = "att";
 window.gate = v => {
@@ -422,14 +436,14 @@ window.onAuth = u => {
 </script>
 <script>
 (function(){
-const ST=["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc"], COL=["#1e9e5a","#2f6fd6","#d63a3a","#e08a00","#7c3aed"];
+const ST=["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc","Nghỉ cuối tuần"], COL=["#1e9e5a","#2f6fd6","#d63a3a","#e08a00","#7c3aed","#0891b2"];
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pct=x=>(x*100).toFixed(1)+"%";
 const ttl=t=>{ t=String(t==null?"":t); if(!/\r?\n/.test(t)){ const m=t.match(/^(.*[\u3131-\uD79D]\S*)\s+([A-Za-z\u00C0-\u1EF9].*)$/); if(m) t=m[1]+"\n"+m[2]; } return esc(t).replace(/\r?\n/g,"<br>"); };
 const av=n=>{const w=String(n||"").trim().split(/\s+/);return `<span class="nm"><i class="av">${esc((w[w.length-1]||"?")[0])}</i><b>${esc(n)}</b></span>`};
-const bdg=s=>`<span class="pill p${({"Đi làm":0,"Phép năm":1,"Không phép":2,"Nghỉ bảo hiểm":3,"Thôi việc":5})[s]||0}">${esc(s)}</span>`;
-if(window.Chart){Chart.defaults.font.family='"Be Vietnam Pro",-apple-system,"Segoe UI",Arial,sans-serif';Chart.defaults.plugins.legend.position="bottom";Chart.defaults.plugins.legend.labels.usePointStyle=true;}
+const bdg=s=>`<span class="pill p${({"Đi làm":0,"Phép năm":1,"Không phép":2,"Nghỉ bảo hiểm":3,"Thôi việc":5,"Nghỉ cuối tuần":6})[s]||0}">${esc(s)}</span>`;
+if(window.Chart){Chart.defaults.font.family='"Be Vietnam Pro",-apple-system,"Segoe UI",Arial,sans-serif';Chart.defaults.plugins.legend.position="bottom";Chart.defaults.plugins.legend.labels.usePointStyle=true;Chart.defaults.font.size=11;Chart.defaults.plugins.legend.labels.boxWidth=8;Chart.defaults.plugins.legend.labels.padding=8;}
 let U=null,D=null,charts={},aSt="",shown=300,timer=null;
 const store=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){return null}};
 const p2=n=>String(n).padStart(2,"0"),ds=d=>d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
@@ -473,13 +487,13 @@ function mk(id,cfg){ if(charts[id]) charts[id].destroy(); charts[id]=new Chart($
 function render(){
   thm();
   const b=D.byStatus,multi=D.from!==D.to,u=multi?" (lượt)":"";
-  const k=[["Tổng nhân sự",D.totalStaff,"#1F4E78"],["Đi làm"+u,b["Đi làm"],COL[0]],["Phép năm"+u,b["Phép năm"],COL[1]],["Không phép"+u,b["Không phép"],COL[2]],["Nghỉ bảo hiểm"+u,b["Nghỉ bảo hiểm"],COL[3]],["Thôi việc"+u,b["Thôi việc"]||0,COL[4]],["Tỷ lệ đi làm",pct(D.attendanceRate),COL[0]],["Tổng lượt điểm danh",D.totalRecords,"#6b7785"]];
+  const k=[["Tổng nhân sự",D.totalStaff,"#1F4E78"],["Đi làm"+u,b["Đi làm"],COL[0]],["Phép năm"+u,b["Phép năm"],COL[1]],["Không phép"+u,b["Không phép"],COL[2]],["Nghỉ bảo hiểm"+u,b["Nghỉ bảo hiểm"],COL[3]],["Thôi việc"+u,b["Thôi việc"]||0,COL[4]],["Nghỉ cuối tuần"+u,b["Nghỉ cuối tuần"]||0,COL[5]],["Tỷ lệ đi làm",pct(D.attendanceRate),COL[0]],["Tổng lượt điểm danh",D.totalRecords,"#6b7785"]];
   $("kpis").innerHTML=k.map(x=>`<div class="kpi" style="--c:${x[2]}"><b>${x[1]}</b><span>${esc(x[0])}</span></div>`).join("");
   const stack=(labels,rows)=>({type:"bar",data:{labels,datasets:ST.map((s,i)=>({label:s,data:rows.map(r=>r[s]),backgroundColor:COL[i]}))}});
   const o1=stack(D.byDay.map(d=>d.date.slice(8)+"/"+d.date.slice(5,7)),D.byDay); o1.options={maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true,beginAtZero:true}}};
   mk("c1",o1);
   const o2=stack(D.byLine.map(l=>l.line),D.byLine); o2.options={indexAxis:"y",maintainAspectRatio:false,scales:{x:{stacked:true},y:{stacked:true}}};
-  $("c2w").style.height=Math.max(200,D.byLine.length*26+70)+"px"; mk("c2",o2);
+  $("c2w").style.height=Math.max(120,D.byLine.length*22+50)+"px"; mk("c2",o2);
   mk("c3",{type:"doughnut",data:{labels:ST,datasets:[{data:ST.map(s=>b[s]),backgroundColor:COL,borderWidth:3,borderColor:cv("--card")}]},options:{maintainAspectRatio:false,cutout:"66%"}});
   $("tLine").innerHTML=tbl(grpCols("Line","line"),D.byLine);
   $("tShift").innerHTML=tbl(grpCols("Ca","shift"),D.byShift);
@@ -528,7 +542,7 @@ function renderReport(){
       return l.map((r,i)=>`<tr>${i?"":`<td class="dp" rowspan="${l.length}">${esc(dp)}</td>`}<td class="l">${ttl(r.title)}</td>${cells(r)}</tr>`).join("")+`<tr class="sub"><td colspan="2" style="text-align:right">Sub Total</td>${cells(sum(l))}</tr>`;}).join("");
     const t=sum(rows), ab=S.absent.slice().sort((a,b)=>a.dept.localeCompare(b.dept));
     return `<div class="rpc"><div class="rh ${sh==="Day"?"d":"n"}"><b>Ngày: ${dm}</b><span class="bd">${t.present}/${t.po} · ${t.po?Math.round(t.present*100/t.po):0}%${S.none?` · chưa ĐD ${S.none}`:""}</span><span class="sp">${sh==="Day"?"CA NGÀY":"CA ĐÊM"}</span></div>
-    <div class="tw"><table class="rt"><thead><tr><th rowspan="2">Bộ phận</th><th rowspan="2">Công việc</th><th rowspan="2">TO</th><th rowspan="2">PO</th><th rowspan="2">Chênh lệch</th><th rowspan="2">Đi làm</th><th rowspan="2">Tỷ lệ</th><th colspan="2">Vắng</th><th rowspan="2">Bảo hiểm BH</th><th rowspan="2">Thôi việc TV</th></tr><tr><th>Phép năm PN</th><th>Không phép KP</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
+    <div class="tw"><table class="rt"><thead><tr><th rowspan="2">Bộ phận</th><th rowspan="2">Công việc</th><th rowspan="2">TO</th><th rowspan="2">PO</th><th rowspan="2">Chênh lệch</th><th rowspan="2">Đi làm</th><th rowspan="2">Tỷ lệ</th><th colspan="2">Vắng</th><th rowspan="2">Bảo hiểm BH</th><th rowspan="2">Thôi việc TV</th></tr><tr><th>Nghỉ phép</th><th>Nghỉ không lý do</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
     <div class="rh" style="background:#2f7be0;margin:8px 0 4px;padding:4px 10px"><b style="font-size:12px">Danh sách nhân viên vắng mặt (${sh==="Day"?"Ca ngày":"Ca đêm"}) · ${ab.length} người</b></div>
     <div class="tw abl">${tbl([{h:"Bộ phận",k:"dept"},{h:"ID",k:"id"},{h:"Tên",f:r=>`<b>${esc(r.name)}</b>`},{h:"Công việc",k:"title"},{h:"Lý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(r.status)})</span>`},{h:"Số ngày",f:r=>r.days>1?`${r.days} ngày (${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)})`:"1 ngày"}],ab)}</div></div>`;
   }).join("");
@@ -544,11 +558,11 @@ async function loadStaff(){
 function renderStaff(){
   if(!SF) return; const q=$("sq").value.trim().toLowerCase(), today=sMode==="today";
   $("sf").classList.toggle("hide",!today); $("lvy").classList.toggle("hide",sMode!=="leave"); if(sMode==="leave") return renderLeave(q);
-  const lab=e=>e.today||"Chưa điểm danh", sc={"Đi làm":"s0","Phép năm":"s1","Không phép":"s2","Nghỉ bảo hiểm":"s3","Thôi việc":"s5","Chưa điểm danh":"s4"};
+  const lab=e=>e.today||"Chưa điểm danh", sc={"Đi làm":"s0","Phép năm":"s1","Không phép":"s2","Nghỉ bảo hiểm":"s3","Thôi việc":"s5","Nghỉ cuối tuần":"s6","Chưa điểm danh":"s4"};
   const base=SF.staff.filter(e=>(!sSh||e.shift===sSh)&&(!q||(e.name+" "+e.id+" "+e.dept+" "+e.line+" "+e.job+" "+e.title).toLowerCase().indexOf(q)>=0));
   const L=today?base.filter(e=>!sFl||lab(e)===sFl):base;
   const cnt=(k,f)=>base.filter(e=>f(e)).length;
-  const chips=today?["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc","Chưa điểm danh"].map(x=>[x,cnt(0,e=>lab(e)===x)])
+  const chips=today?["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc","Nghỉ cuối tuần","Chưa điểm danh"].map(x=>[x,cnt(0,e=>lab(e)===x)])
     :[["Tổng nhân lực",base.length],["Ca ngày",cnt(0,e=>e.shift==="Day")],["Ca đêm",cnt(0,e=>e.shift==="Night")],["Direct",cnt(0,e=>/^direct/i.test(e.pos))],["Indirect",cnt(0,e=>/^indirect/i.test(e.pos))]];
   $("sk").innerHTML=chips.map(c=>`<span class="q">${esc(c[0])}: <b>${c[1]}</b></span>`).join("");
   $("scnt").textContent=(today?"Nhân lực hôm nay "+SF.date.split("-").reverse().join("/")+" · ":"Nhân lực tổng thể · ")+L.length+" người";
@@ -660,9 +674,9 @@ window.Dash={start:u=>{U=u;setRange("today");startTimer()},staff:loadStaff,fit:f
 <script>
 (function(){
 
-const STATUSES = ["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc"];
-const SHORT = {"Đi làm":"Đi làm","Phép năm":"Phép năm","Không phép":"Không phép","Nghỉ bảo hiểm":"Bảo hiểm","Thôi việc":"Thôi việc"};
-let REASONS = [], FIXED = {}, HALF = "", ONLY = {};
+const STATUSES = ["Đi làm","Phép năm","Không phép","Nghỉ bảo hiểm","Thôi việc","Nghỉ cuối tuần"];
+const SHORT = {"Đi làm":"Đi làm","Phép năm":"Phép năm","Không phép":"Không phép","Nghỉ bảo hiểm":"Bảo hiểm","Thôi việc":"Thôi việc","Nghỉ cuối tuần":"Cuối tuần"};
+let REASONS = [], FIXED = {}, HALF = "", ONLY = {}, SONLY = {}, OFFDAY = true;
 const S = { user:null, lines:[], shift:"Day", staff:[], line:"", date:"", busy:false };
 const $ = id => document.getElementById(id);
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -722,7 +736,7 @@ async function openRoster(){
     if(!S.line) throw new Error("Chưa chọn Line");
     if(!S.date) throw new Error("Chưa chọn ngày");
     const r = await api("roster",{line:S.line,date:S.date,shift:S.shift});
-    REASONS=r.reasons; FIXED=r.fixedReason; HALF=r.halfReason||""; ONLY=r.onlyWith||{};
+    REASONS=r.reasons; FIXED=r.fixedReason; HALF=r.halfReason||""; ONLY=r.onlyWith||{}; SONLY=r.statusOnly||{}; OFFDAY=r.offDay!==false;
     S.staff = r.staff.map(s=>Object.assign({orig:{status:s.status,reason:s.reason}},s));
     store("att_line",S.line);
     renderRoster(); show("roster");
@@ -731,6 +745,7 @@ async function openRoster(){
   finally{ busy(btn,false,"x"); }
 }
 function allowedReasons(status){
+  if(SONLY[status]) return REASONS.filter(r=>SONLY[status].indexOf(r)>=0);
   return REASONS.filter(r=>{ const owner=Object.keys(FIXED).find(k=>FIXED[k]===r); return (!owner || owner===status) && (!ONLY[r] || ONLY[r]===status); });
 }
 const RIC={
@@ -754,19 +769,20 @@ function reasonList(st){
 }
 function ric(r){
   const n=String(r).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d");
-  const k=/thoi viec/.test(n)?"out":/0[.,]5/.test(n)?"half":/con om/.test(n)?"heart":/gia dinh/.test(n)?"home":/\bom\b|benh/.test(n)?"therm":/\bxe\b/.test(n)?"car":/que/.test(n)?"pin":/muon|tre/.test(n)?"clock":/khong phep/.test(n)?"warn":/phep/.test(n)?"sun":/bao hiem|thai san/.test(n)?"shield":"note";
+  const k=/thoi viec/.test(n)?"out":/khong xin phep|khong ly do/.test(n)?"warn":/0[.,]5/.test(n)?"half":/con om/.test(n)?"heart":/gia dinh/.test(n)?"home":/\bom\b|benh/.test(n)?"therm":/\bxe\b/.test(n)?"car":/que/.test(n)?"pin":/muon|tre/.test(n)?"clock":/khong phep/.test(n)?"warn":/phep/.test(n)?"sun":/bao hiem|thai san/.test(n)?"shield":"note";
   return `<svg class="ic" viewBox="0 0 24 24" style="color:${RIC[k][0]}">${RIC[k][1]}</svg>`;
 }
 function cardHtml(s){
   const dis = s.locked ? "disabled" : "";
-  const btns = STATUSES.map(st=>`<button ${dis} data-st="${esc(st)}" class="${s.status===st?"on":""}">${esc(SHORT[st])}</button>`).join("");
+  const SL = STATUSES.filter(st=>st!=="Nghỉ cuối tuần"||OFFDAY);
+  const btns = SL.map(st=>`<button ${dis} data-st="${esc(st)}" class="${s.status===st?"on":""}">${esc(SHORT[st])}</button>`).join("");
   let sel="";
   if(s.status && s.status!=="Đi làm"){
     sel = `<div class="rl">${BULB}Chọn nhanh lý do vắng</div><div class="rs">` + reasonList(s.status).map(r=>`<button ${dis} data-reason="${esc(r)}" class="${r===s.reason?"on":""}">${ric(r)}<span>${esc(r)}</span></button>`).join("") + `</div>`;
   }
   const tag = s.submitted ? `<span class="tag">${s.locked?"Đã gửi · khóa":"Đã gửi"}</span>` : "";
   const note = s.locked ? `<div class="note">Chỉ Quản lý mới sửa được bản ghi đã gửi.</div>` : "";
-  return `<div class="top"><div><span class="nm">${esc(s.name)}</span> <span class="id">${esc(s.id)}</span></div>${tag}</div><div class="sts">${btns}</div>${sel}${note}`;
+  return `<div class="top"><div><span class="nm">${esc(s.name)}</span> <span class="id">${esc(s.id)}</span></div>${tag}</div><div class="sts" style="--n:${SL.length}">${btns}</div>${sel}${note}`;
 }
 function renderRoster(){
   $("rTitle").textContent = "Line " + S.line;
