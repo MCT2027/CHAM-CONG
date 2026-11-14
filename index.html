@@ -475,7 +475,7 @@ async function load(){
 function startTimer(){ clearInterval(timer); timer=setInterval(()=>{ if($("auto").checked&&!document.hidden&&U){ const tb=document.body.dataset.tab; if(tb==="rep"){load(); if(!$("t4").classList.contains("hide")) loadReport();} if(tb==="hr") loadStaff(); } },60000); }
 
 function tbl(cols,rows,cls){
-  return `<table><thead><tr>${cols.map(c=>`<th class="${c.n?"n":""}">${esc(c.h)}</th>`).join("")}</tr></thead><tbody>${
+  return `<table><thead><tr>${cols.map(c=>`<th class="${c.n?"n":""}">${esc(c.h).replace(/\n/g,"<br>")}</th>`).join("")}</tr></thead><tbody>${
    rows.map(r=>`<tr>${cols.map(c=>`<td class="${c.n?"n":""} ${c.cls?c.cls(r):""}">${c.f?c.f(r):esc(r[c.k])}</td>`).join("")}</tr>`).join("")||`<tr><td colspan="${cols.length}" class="mut">Không có dữ liệu</td></tr>`}</tbody></table>`;
 }
 function grpCols(label,key){ return [{h:label,k:key}].concat(ST.map(s=>({h:s,k:s,n:1})),[{h:"Tỷ lệ đi làm",n:1,f:r=>pct(r.rate)}]); }
@@ -542,9 +542,9 @@ function renderReport(){
       return l.map((r,i)=>`<tr>${i?"":`<td class="dp" rowspan="${l.length}">${esc(dp)}</td>`}<td class="l">${ttl(r.title)}</td>${cells(r)}</tr>`).join("")+`<tr class="sub"><td colspan="2" style="text-align:right">Sub Total</td>${cells(sum(l))}</tr>`;}).join("");
     const t=sum(rows), ab=S.absent.slice().sort((a,b)=>a.dept.localeCompare(b.dept));
     return `<div class="rpc"><div class="rh ${sh==="Day"?"d":"n"}"><b>Ngày: ${dm}</b><span class="bd">${t.present}/${t.po} · ${t.po?Math.round(t.present*100/t.po):0}%${S.none?` · chưa ĐD ${S.none}`:""}</span><span class="sp">${sh==="Day"?"CA NGÀY":"CA ĐÊM"}</span></div>
-    <div class="tw"><table class="rt"><thead><tr><th rowspan="2">Bộ phận</th><th rowspan="2">Công việc</th><th rowspan="2">TO</th><th rowspan="2">PO</th><th rowspan="2">Chênh lệch</th><th rowspan="2">Đi làm</th><th rowspan="2">Tỷ lệ</th><th colspan="2">Vắng</th><th rowspan="2">Bảo hiểm BH</th><th rowspan="2">Thôi việc TV</th></tr><tr><th>Nghỉ phép</th><th>Nghỉ không lý do</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
+    <div class="tw"><table class="rt"><thead><tr><th rowspan="2">부서<br>Bộ phận</th><th rowspan="2">업무<br>Công việc</th><th rowspan="2">정원<br>TO</th><th rowspan="2">현원<br>PO</th><th rowspan="2">과부족<br>Chênh lệch</th><th rowspan="2">출근<br>Đi làm</th><th rowspan="2">출근율<br>Tỷ lệ</th><th colspan="2">결근 Vắng</th><th rowspan="2">보험휴가<br>Bảo hiểm BH</th><th rowspan="2">퇴사<br>Thôi việc TV</th></tr><tr><th>연차<br>Nghỉ phép</th><th>무단결근<br>Nghỉ không lý do</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
     <div class="rh" style="background:#2f7be0;margin:8px 0 4px;padding:4px 10px"><b style="font-size:12px">Danh sách nhân viên vắng mặt (${sh==="Day"?"Ca ngày":"Ca đêm"}) · ${ab.length} người</b></div>
-    <div class="tw abl">${tbl([{h:"Bộ phận",k:"dept"},{h:"ID",k:"id"},{h:"Tên",f:r=>`<b>${esc(r.name)}</b>`},{h:"Công việc",k:"title"},{h:"Lý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(r.status)})</span>`},{h:"Số ngày",f:r=>r.days>1?`${r.days} ngày (${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)})`:"1 ngày"}],ab)}</div></div>`;
+    <div class="tw abl">${tbl([{h:"부서\nBộ phận",k:"dept"},{h:"ID",k:"id"},{h:"이름\nTên",f:r=>`<b>${esc(r.name)}</b>`},{h:"업무\nCông việc",k:"title"},{h:"사유\nLý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(r.status)})</span>`},{h:"일수\nSố ngày",f:r=>r.days>1?`${r.days} ngày (${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)})`:"1 ngày"}],ab)}</div></div>`;
   }).join("");
   fitReport(); setTimeout(fitReport,150);
 }
