@@ -284,6 +284,11 @@ body[data-tab="rep"] main{padding-bottom:16px}
 .abl th,.abl td{padding:3px 5px;white-space:nowrap;line-height:1.25;vertical-align:middle}
 .abl th:nth-child(4),.abl td:nth-child(4),.abl th:nth-child(5),.abl td:nth-child(5){white-space:normal;overflow-wrap:break-word;min-width:95px}
 .abl .mut{font-size:10px}
+.dur{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.dur button{min-height:30px;padding:4px 10px;border:1px solid var(--line);background:var(--card);border-radius:9px;font-size:12px;color:var(--txt)}
+.dur button.on{background:var(--selbg);border-color:var(--pri);color:var(--pri);font-weight:700}
+.dur input{padding:4px 8px;font-size:12px;border-radius:9px;width:auto}
+.dur .mut{font-size:12px}
 </style>
 </head>
 <body data-tab="login">
@@ -410,7 +415,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
 
 <script>
 /* Địa chỉ Web App (Apps Script, kết thúc /exec) dùng chung cho cả 3 tab */
-const API_URL = "https://script.google.com/macros/s/AKfycbzM3w9N1EuOmsrBD8wHcXHVXSj5v9JHNa0i9DvGGfGs0Gz-PL2acGaS247aKq0-OLtybA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz3n_OcxzBrhwn-Diicgpois5m_ukgA-BFQn4kjCXWZaVAYACngg0QZkDANCDCveY6Lcw/exec";
 const $ = id => document.getElementById(id);
 let curTab = "att";
 window.gate = v => {
@@ -550,7 +555,7 @@ function renderReport(){
     return `<div class="rpc"><div class="rh ${sh==="Day"?"d":"n"}"><b>Ngày: ${dm}</b><span class="bd">${t.present}/${t.po} · ${t.po?Math.round(t.present*100/t.po):0}%${S.none?` · chưa ĐD ${S.none}`:""}</span><span class="sp">${sh==="Day"?"CA NGÀY":"CA ĐÊM"}</span></div>
     <div class="tw"><table class="rt"><thead><tr><th rowspan="2">부서<br>Bộ phận</th><th rowspan="2">업무<br>Công việc</th><th rowspan="2">정원<br>TO</th><th rowspan="2">현원<br>PO</th><th rowspan="2">과부족<br>Chênh lệch</th><th rowspan="2">출근<br>Đi làm</th><th rowspan="2">출근율<br>Tỷ lệ</th><th colspan="2">결근 Vắng</th><th rowspan="2">신입<br>Người mới</th><th rowspan="2">퇴사<br>Thôi việc TV</th></tr><tr><th>연차<br>Nghỉ phép</th><th>무단결근<br>Nghỉ không lý do</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
     <div class="rh" style="background:#2f7be0;margin:8px 0 4px;padding:4px 10px"><b style="font-size:12px">Danh sách nhân viên vắng mặt (${sh==="Day"?"Ca ngày":"Ca đêm"}) · ${ab.length} người</b></div>
-    <div class="tw abl">${tbl([{h:"부서\nBộ phận",k:"dept"},{h:"ID",k:"id"},{h:"이름\nTên",f:r=>`<b>${esc(r.name)}</b>`},{h:"업무\nCông việc",k:"title"},{h:"사유\nLý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(lb(r.status))})</span>`},{h:"일수\nSố ngày",f:r=>r.days>1?`${r.days} ngày<br><span class="mut" style="font-size:10px">${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)}</span>`:"1 ngày"}],ab)}</div></div>`;
+    <div class="tw abl">${tbl([{h:"부서\nBộ phận",k:"dept"},{h:"ID",k:"id"},{h:"이름\nTên",f:r=>`<b>${esc(r.name)}</b>`},{h:"업무\nCông việc",k:"title"},{h:"사유\nLý do nghỉ",f:r=>`<span class="neg">${esc(r.reason||"Chưa có lý do")}</span> <span class="mut">(${esc(lb(r.status))})</span>`},{h:"일수\nSố ngày",f:r=>r.days>1?`${r.days} ngày<br><span class="mut" style="font-size:10px">${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)}</span>`:"1 ngày"}],ab)}</div></div>`;
   }).join("");
   fitReport(); setTimeout(fitReport,150);
 }
@@ -688,6 +693,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
 function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); if(v===null) localStorage.removeItem(k); else localStorage.setItem(k,v);}catch(e){return null;} }
+function addD(s,n){ const d=new Date(s+"T00:00:00"); d.setDate(d.getDate()+n); const p=x=>String(x).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
 function todayStr(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
 function show(v){ window.gate(v==="login"?"login":"app"); if(v!=="login") ["pick","roster"].forEach(x=>$("v-"+x).classList.toggle("hidden",x!==v)); $("bar").classList.toggle("hidden",v!=="roster"); window.scrollTo(0,0); }
 function msg(el,type,text){ el.innerHTML = text? `<div class="${type}">${esc(text)}</div>`:""; }
@@ -767,6 +773,7 @@ const RIC={
  out:["#7c3aed",'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>'],
  half:["#f59e0b",'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>'],
  note:["#64748b",'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>']};
+const CAL='<svg class="ic" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
 const BULB='<svg class="ic" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg>';
 function reasonList(st){
   const l=allowedReasons(st).slice();
@@ -780,14 +787,19 @@ function ric(r){
 }
 function cardHtml(s){
   const dis = s.locked ? "disabled" : "";
+  const disSt = (s.locked||s.fillReason) ? "disabled" : "";
   const SL = STATUSES.filter(st=>st!=="Nghỉ cuối tuần"||OFFDAY);
-  const btns = SL.map(st=>`<button ${dis} data-st="${esc(st)}" class="${s.status===st?"on":""}">${esc(SHORT[st])}</button>`).join("");
+  const btns = SL.map(st=>`<button ${disSt} data-st="${esc(st)}" class="${s.status===st?"on":""}">${esc(SHORT[st])}</button>`).join("");
   let sel="";
   if(s.status && s.status!=="Đi làm"){
-    sel = `<div class="rl">${BULB}Chọn nhanh lý do vắng</div><div class="rs">` + reasonList(s.status).map(r=>`<button ${dis} data-reason="${esc(r)}" class="${r===s.reason?"on":""}">${ric(r)}<span>${esc(r)}</span></button>`).join("") + `</div>`;
+    sel = `<div class="rl">${BULB}Lý do vắng (có thể bổ sung sau)</div><div class="rs">` + reasonList(s.status).map(r=>`<button ${dis} data-reason="${esc(r)}" class="${r===s.reason?"on":""}">${ric(r)}<span>${esc(r)}</span></button>`).join("") + `</div>`;
+    if(s.status==="Phép năm" && !s.locked && !s.fillReason && s.reason!==HALF){
+      const dur=s.dur||1, fr=s.from||S.date, to=s.to||fr, fd=x=>x.split("-").reverse().join("/");
+      sel += `<div class="rl">${CAL}Số ngày nghỉ</div><div class="dur">`+[1,2,3].map(n=>`<button data-dur="${n}" class="${dur===n?"on":""}">${n} ngày</button>`).join("")+`<button data-dur="x" class="${dur==="x"?"on":""}">Khác</button>`+(dur==="x"?`<span class="mut">Từ</span><input type="date" class="dfrom" min="${esc(addD(S.date,-31))}" value="${esc(fr)}"><span class="mut">đến</span><input type="date" class="dto" min="${esc(fr)}" value="${esc(to)}">`:"")+`</div>`+(dur!==1?`<div class="note">${dur==="x"&&fr>S.date?`Hôm nay vẫn ghi Đi làm; nghỉ bắt đầu từ ${esc(fd(fr))}.`:"Các ngày sau sẽ tự điểm danh."} Chủ nhật và thứ 7 nghỉ không tính vào số ngày.</div>`:"");
+    }
   }
   const tag = s.submitted ? `<span class="tag">${s.locked?"Đã gửi · khóa":"Đã gửi"}</span>` : "";
-  const note = s.locked ? `<div class="note">Chỉ Quản lý mới sửa được bản ghi đã gửi.</div>` : "";
+  const note = s.locked ? `<div class="note">Chỉ Quản lý mới sửa được bản ghi đã gửi.</div>` : (s.fillReason ? `<div class="note">Đã gửi. Bạn có thể bổ sung lý do nghỉ.</div>` : "");
   return `<div class="top"><div><span class="nm">${esc(s.name)}</span> <span class="id">${esc(s.id)}</span></div>${tag}</div><div class="sts" style="--n:${SL.length}">${btns}</div>${sel}${note}`;
 }
 function renderRoster(){
@@ -806,15 +818,28 @@ function updateSummary(){
 }
 function setStatus(s, st){
   s.status = st;
+  if(st!=="Phép năm"){ s.dur=1; s.from=""; s.to=""; }
   if(st==="Đi làm"){ s.reason=""; return; }
   const ok = allowedReasons(st);
-  if(ok.indexOf(s.reason)<0) s.reason = FIXED[st] || ok[0];
+  if(ok.indexOf(s.reason)<0) s.reason = st==="Phép năm" ? "" : (FIXED[st] || "");
 }
 $("list").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-st],button[data-reason]"); if(!b||b.disabled) return;
+  const b=e.target.closest("button[data-st],button[data-reason],button[data-dur]"); if(!b||b.disabled) return;
   const card=b.closest(".emp"); const s=S.staff.find(x=>x.id===card.dataset.id); if(!s||s.locked) return;
-  if(b.dataset.st) setStatus(s,b.dataset.st); else s.reason=b.dataset.reason;
+  if(b.dataset.st) setStatus(s,b.dataset.st);
+  else if(b.dataset.reason){
+    s.reason = b.dataset.reason===s.reason ? "" : b.dataset.reason;   // bấm lại để bỏ chọn
+    if(s.reason===HALF){ s.dur=1; s.from=""; s.to=""; }
+    if(s.reason==="Nghỉ không lương"&&s.status==="Phép năm"){ s.dur="x"; s.from=s.from||S.date; s.to=s.to||s.from; }   // nghỉ dài hạn: chọn từ ngày - đến ngày
+  }
+  else { s.dur=b.dataset.dur==="x"?"x":+b.dataset.dur; if(s.dur==="x"){ s.from=s.from||S.date; s.to=s.to||s.from; } }
   card.innerHTML=cardHtml(s); updateSummary();
+});
+$("list").addEventListener("change",e=>{
+  const i=e.target.closest(".dto,.dfrom"); if(!i) return;
+  const card=i.closest(".emp"), s=S.staff.find(x=>x.id===card.dataset.id); if(!s) return;
+  if(i.classList.contains("dfrom")){ s.from=i.value||S.date; if(!s.to||s.to<s.from) s.to=s.from; } else s.to=i.value||s.from||S.date;
+  card.innerHTML=cardHtml(s);
 });
 $("allGo").onclick=()=>{
   let n=0; S.staff.forEach(s=>{ if(!s.locked && STATUSES.indexOf(s.status)<0){ setStatus(s,"Đi làm"); n++; } });
@@ -832,9 +857,13 @@ $("q").addEventListener("input",()=>{
 /* ---------- Gửi ---------- */
 $("submitBtn").onclick=async()=>{
   const btn=$("submitBtn");
-  const records=S.staff.filter(s=>!s.locked).map(s=>({id:s.id,status:s.status,reason:s.reason}));
+  const bad=S.staff.find(s=>!s.locked&&s.status==="Phép năm"&&s.reason!==HALF&&s.dur==="x"&&(!s.to||s.to<(s.from||S.date)));
+  if(bad){ msg($("msgs"),"err","Ngày kết thúc nghỉ của "+bad.name+" không được sớm hơn ngày bắt đầu."); window.scrollTo(0,0); return; }
+  const records=S.staff.filter(s=>!s.locked).map(s=>{ const o={id:s.id,status:s.status,reason:s.reason};
+    if(s.status==="Phép năm"&&s.reason!==HALF){ if(s.dur===2||s.dur===3) o.days=s.dur; else if(s.dur==="x"){ o.from=s.from||S.date; o.to=s.to||o.from; } }
+    return o; });
   const d=S.staff.filter(s=>!s.locked&&s.status!=="Đi làm").length;
-  if(!confirm(`Gửi điểm danh Line ${S.line}, ${S.date.split("-").reverse().join("/")}, ${S.shift==="Day"?"ca ngày":"ca đêm"}?\n${records.length} người, trong đó ${d} người nghỉ.`)) return;
+  if(!confirm(`Gửi điểm danh Line ${S.line}, ${S.date.split("-").reverse().join("/")}, ${S.shift==="Day"?"ca ngày":"ca đêm"}?\n${records.length} người, trong đó ${d} người nghỉ.${records.some(r=>r.days||r.to)?"\nCó người nghỉ nhiều ngày: các ngày sau sẽ tự điểm danh.":""}`)) return;
   S.busy=true; busy(btn,true,"Đang gửi…");
   try{
     const r=await api("submit",{line:S.line,date:S.date,shift:S.shift,records});
@@ -844,6 +873,7 @@ $("submitBtn").onclick=async()=>{
     S.staff=rr.staff.map(s=>Object.assign({orig:{status:s.status,reason:s.reason}},s));
     renderRoster();
     msg($("msgs"),"ok",t);
+    if(r.info&&r.info.length) $("msgs").insertAdjacentHTML("beforeend",`<div class="ok">${esc(r.info.join("\n"))}</div>`);
     if(r.warnings&&r.warnings.length) $("msgs").insertAdjacentHTML("beforeend",`<div class="warn">${esc("Cảnh báo:\n- "+r.warnings.join("\n- "))}</div>`);
     if(r.locked&&r.locked.length) $("msgs").insertAdjacentHTML("beforeend",`<div class="err">${esc("Không sửa được (đã gửi, cần Quản lý):\n- "+r.locked.join("\n- "))}</div>`);
     window.scrollTo(0,0);
