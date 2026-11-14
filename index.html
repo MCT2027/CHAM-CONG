@@ -279,6 +279,11 @@ body[data-tab="rep"] main{padding-bottom:16px}
   .g3>.card,.g3>.card:first-child{grid-column:span 2}
   .g3>.card:nth-child(4){grid-column:span 4}
 }
+/* Danh sách vắng mặt: cột ngắn (Bộ phận, ID, Tên, Số ngày) giữ một dòng; cột dài (Công việc, Lý do) nhận phần rộng còn lại và chỉ xuống dòng khi thật cần */
+.abl table{table-layout:auto;width:100%}
+.abl th,.abl td{padding:3px 5px;white-space:nowrap;line-height:1.25;vertical-align:middle}
+.abl th:nth-child(4),.abl td:nth-child(4),.abl th:nth-child(5),.abl td:nth-child(5){white-space:normal;overflow-wrap:break-word;min-width:95px}
+.abl .mut{font-size:10px}
 </style>
 </head>
 <body data-tab="login">
@@ -544,7 +549,7 @@ function renderReport(){
     return `<div class="rpc"><div class="rh ${sh==="Day"?"d":"n"}"><b>Ngày: ${dm}</b><span class="bd">${t.present}/${t.po} · ${t.po?Math.round(t.present*100/t.po):0}%${S.none?` · chưa ĐD ${S.none}`:""}</span><span class="sp">${sh==="Day"?"CA NGÀY":"CA ĐÊM"}</span></div>
     <div class="tw"><table class="rt"><thead><tr><th rowspan="2">부서<br>Bộ phận</th><th rowspan="2">업무<br>Công việc</th><th rowspan="2">정원<br>TO</th><th rowspan="2">현원<br>PO</th><th rowspan="2">과부족<br>Chênh lệch</th><th rowspan="2">출근<br>Đi làm</th><th rowspan="2">출근율<br>Tỷ lệ</th><th colspan="2">결근 Vắng</th><th rowspan="2">보험휴가<br>Bảo hiểm BH</th><th rowspan="2">퇴사<br>Thôi việc TV</th></tr><tr><th>연차<br>Nghỉ phép</th><th>무단결근<br>Nghỉ không lý do</th></tr></thead><tbody>${body||'<tr><td colspan="11" class="mut">Không có nhân viên</td></tr>'}<tr class="gr"><td colspan="2" style="text-align:right">GRAND TOTAL</td>${cells(t)}</tr></tbody></table></div>
     <div class="rh" style="background:#2f7be0;margin:8px 0 4px;padding:4px 10px"><b style="font-size:12px">Danh sách nhân viên vắng mặt (${sh==="Day"?"Ca ngày":"Ca đêm"}) · ${ab.length} người</b></div>
-    <div class="tw abl">${tbl([{h:"부서\nBộ phận",k:"dept"},{h:"ID",k:"id"},{h:"이름\nTên",f:r=>`<b>${esc(r.name)}</b>`},{h:"업무\nCông việc",k:"title"},{h:"사유\nLý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(r.status)})</span>`},{h:"일수\nSố ngày",f:r=>r.days>1?`${r.days} ngày (${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)})`:"1 ngày"}],ab)}</div></div>`;
+    <div class="tw abl">${tbl([{h:"부서\nBộ phận",k:"dept"},{h:"ID",k:"id"},{h:"이름\nTên",f:r=>`<b>${esc(r.name)}</b>`},{h:"업무\nCông việc",k:"title"},{h:"사유\nLý do nghỉ",f:r=>`<span class="neg">${esc(r.reason)}</span> <span class="mut">(${esc(r.status)})</span>`},{h:"일수\nSố ngày",f:r=>r.days>1?`${r.days} ngày<br><span class="mut" style="font-size:10px">${r.from.slice(8)}/${r.from.slice(5,7)}→${sd.slice(8)}/${sd.slice(5,7)}</span>`:"1 ngày"}],ab)}</div></div>`;
   }).join("");
   fitReport(); setTimeout(fitReport,150);
 }
