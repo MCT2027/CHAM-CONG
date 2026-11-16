@@ -381,7 +381,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
     <div class="card"><h3>Báo cáo theo ngày</h3><div class="tw" style="max-height:68vh" id="tDay"></div></div>
   </section>
       <section id="t4" class="hide">
-    <div class="rdbar"><button class="q" id="dPrev">‹</button><input type="date" id="rDate"><button class="q" id="dNext">›</button><button class="q" id="dToday">Hôm nay</button></div>
+    <div class="rdbar"><button class="q" id="dPrev">‹</button><input type="date" id="rDate"><button class="q" id="dNext">›</button><button class="q" id="dToday">Hôm nay</button><button class="q" id="dCopy" title="Sao chép ảnh báo cáo để dán vào Zalo / email">Sao chép ảnh</button><button class="q" id="dImg" title="Tải ảnh báo cáo (PNG)">Lưu ảnh</button></div>
     <div id="rMsg"></div><div class="rp" id="rp"></div>
   </section>
       <section id="t2" class="hide"><div class="card">
@@ -415,7 +415,7 @@ body[data-tab="rep"] main{padding-bottom:16px}
 
 <script>
 /* Địa chỉ Web App (Apps Script, kết thúc /exec) dùng chung cho cả 3 tab */
-const API_URL = "https://script.google.com/macros/s/AKfycbz3n_OcxzBrhwn-Diicgpois5m_ukgA-BFQn4kjCXWZaVAYACngg0QZkDANCDCveY6Lcw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzRCMjdUtfAg-QIxn0LeSvpn8I7-vy9JZUKTs-0cZNZntFu8UjdzvaPh_RBwab810a2cA/exec";
 const $ = id => document.getElementById(id);
 let curTab = "att";
 window.gate = v => {
@@ -548,7 +548,8 @@ function renderReport(){
     const S=R.shifts[sh], rows=S.rows.slice(), sd=(R.shiftDates&&R.shiftDates[sh])||R.date, dm=sd.split("-").reverse().join("/");
     const depts=[...new Set(rows.map(r=>r.dept))];
     const sum=l=>l.reduce((a,r)=>{["to","po","present","pn","kp","nw","tv"].forEach(k=>a[k]+=r[k]||0);return a},{to:0,po:0,present:0,pn:0,kp:0,nw:0,tv:0});
-    const cells=g=>`<td>${g.to}</td><td>${g.po}</td><td class="${g.po-g.to?"neg":"z0"}">${g.po-g.to?"("+(g.to-g.po)+")":0}</td><td class="pc">${g.present}</td><td class="pc">${g.po?Math.round(g.present*100/g.po):0}%</td><td class="${g.pn?"neg":"z0"}">${g.pn}</td><td class="${g.kp?"neg":"z0"}">${g.kp}</td><td class="${g.nw?"pc":"z0"}">${g.nw||0}</td><td class="${g.tv?"neg":"z0"}">${g.tv||0}</td>`;
+    const nz=x=>x?x:"";   // số 0 để trống cho gọn
+    const cells=g=>`<td>${nz(g.to)}</td><td>${nz(g.po)}</td><td class="${g.po-g.to?"neg":"z0"}">${g.po-g.to?"("+(g.to-g.po)+")":""}</td><td class="pc">${nz(g.present)}</td><td class="pc">${g.po?Math.round(g.present*100/g.po)+"%":""}</td><td class="${g.pn?"neg":"z0"}">${nz(g.pn)}</td><td class="${g.kp?"neg":"z0"}">${nz(g.kp)}</td><td class="${g.nw?"pc":"z0"}">${nz(g.nw)}</td><td class="${g.tv?"neg":"z0"}">${nz(g.tv)}</td>`;
     const body=depts.map(dp=>{ const l=rows.filter(r=>r.dept===dp);
       return l.map((r,i)=>`<tr>${i?"":`<td class="dp" rowspan="${l.length}">${esc(dp)}</td>`}<td class="l">${ttl(r.title)}</td>${cells(r)}</tr>`).join("")+`<tr class="sub"><td colspan="2" style="text-align:right">Sub Total</td>${cells(sum(l))}</tr>`;}).join("");
     const t=sum(rows), ab=S.absent.slice().sort((a,b)=>a.dept.localeCompare(b.dept));
@@ -669,6 +670,33 @@ function fitReport(){
   el.style.zoom=Math.max(.3,z);
 }
 addEventListener("resize",fitReport);
+/* Lưu / sao chép ảnh báo cáo: tự vẽ bằng SVG, không dùng thư viện ngoài */
+async function snapReport(){
+  const el=$("rp"); if(!el||!el.children.length) throw new Error("Chưa có báo cáo để chụp");
+  const z0=el.style.zoom; el.style.zoom=1;
+  try{
+    const r=el.getBoundingClientRect(), W=Math.ceil(r.width), H=Math.ceil(r.height), pad=12, clone=el.cloneNode(true);
+    const A=[el,...el.querySelectorAll("*")], B=[clone,...clone.querySelectorAll("*")];
+    A.forEach((a,i)=>{ const cs=getComputedStyle(a); let t=""; for(let k=0;k<cs.length;k++) t+=cs[k]+":"+cs.getPropertyValue(cs[k])+";"; B[i].setAttribute("style",t); });
+    clone.style.margin="0"; clone.style.zoom="1"; clone.style.width=W+"px"; clone.style.maxWidth="none";
+    const w=W+2*pad, h=H+2*pad;
+    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml" style="width:${w}px;height:${h}px;padding:${pad}px;box-sizing:border-box;background:${cv("--bg")}">${new XMLSerializer().serializeToString(clone)}</div></foreignObject></svg>`;
+    const img=new Image(); img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+    await new Promise((ok,no)=>{ img.onload=ok; img.onerror=()=>no(new Error("Không tạo được ảnh")); });
+    const sc=Math.min(2,Math.max(1,window.devicePixelRatio||1)), c=document.createElement("canvas");
+    c.width=w*sc; c.height=h*sc; const g=c.getContext("2d"); g.scale(sc,sc); g.drawImage(img,0,0);
+    return await new Promise((ok,no)=>c.toBlob(b=>b?ok(b):no(new Error("Trình duyệt không cho lưu ảnh")),"image/png"));
+  } finally { el.style.zoom=z0; }
+}
+function repNote(type,text){ $("rMsg").innerHTML=`<div class="${type}">${esc(text)}</div>`; if(type==="ok") setTimeout(()=>{ $("rMsg").innerHTML=""; },3500); }
+$("dImg").onclick=async()=>{ const b=$("dImg"); b.disabled=true;
+  try{ const blob=await snapReport(), u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download="BaoCao_DiemDanh_"+$("rDate").value+".png"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); repNote("ok","Đã tải ảnh báo cáo."); }
+  catch(e){ repNote("err",e.message+". Có thể dùng Win+Shift+S để chụp màn hình."); }
+  b.disabled=false; };
+$("dCopy").onclick=async()=>{ const b=$("dCopy"); b.disabled=true;
+  try{ if(!navigator.clipboard||!window.ClipboardItem) throw new Error("Trình duyệt chưa hỗ trợ sao chép ảnh, hãy dùng nút Lưu ảnh"); await navigator.clipboard.write([new ClipboardItem({"image/png":await snapReport()})]); repNote("ok","Đã sao chép ảnh. Dán (Ctrl + V) vào Zalo hoặc email."); }
+  catch(e){ repNote("err",e.message); }
+  b.disabled=false; };
 /* Hồ sơ nhân sự: tải xuống nội dung đang xem (Excel) */
 $("dl").onclick=()=>{
   const t=$("tStaff").querySelector("table"); if(!t||!window.XLSX) return;
