@@ -53,7 +53,8 @@ input:focus,select:focus{outline:3px solid color-mix(in srgb,var(--pri) 30%,tran
 .ok{background:color-mix(in srgb,var(--go) 13%,var(--card));color:color-mix(in srgb,var(--go) 70%,var(--txt))}
 .warn{background:color-mix(in srgb,var(--in) 14%,var(--card));color:color-mix(in srgb,var(--in) 70%,var(--txt))}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
-.chip{font-size:13px;padding:5px 11px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-weight:500}.chip b{margin-left:5px;color:var(--pri)}
+.chip{font-size:13px;padding:5px 11px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-weight:500}
+button.chl{cursor:pointer;font-family:inherit;color:inherit}button.chl:hover{border-color:var(--pri)}.chl small{margin-left:6px;color:var(--mut,#94a3b8);font-weight:400;font-size:11px}.chip b{margin-left:5px;color:var(--pri)}
 .tools{display:flex;gap:8px;margin-bottom:12px}.tools input{flex:1;padding:11px}
 .tools button{padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:14px;font-weight:600;color:var(--pri);white-space:nowrap}
 .emp{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:var(--sh)}
@@ -609,7 +610,7 @@ function renderDone(){
   if(!TD) return; renderMix(); const old=$("dd").querySelector("details"), was=old&&old.open;
   const sel=ddSh(), info={Day:ddGrp("Day"),Night:ddGrp("Night"),all:ddGrp("all")}, c=info[sel], sc={Day:"ca ngày",Night:"ca đêm",all:"cả 2 ca"}[sel];
   const seg=[["Day","Ngày"],["Night","Đêm"],["all","Tất cả"]].map(([k,l])=>`<button class="q${k===sel?" on":""}" data-dsh="${k}" title="Điểm danh ${k==="all"?"cả 2 ca":k==="Day"?"ca ngày":"ca đêm"}">${l}${info[k].ok?" ✔":""}</button>`).join("");
-  $("dd").innerHTML=`<div class="seg2 sm">${seg}</div><details class="ddx"${was?" open":""}><summary title="Tình trạng điểm danh hôm nay (${sc})"><span class="pill ${c.ok?"p0":c.T?"p3":"p4"}">${c.ok?"✔ Xong":c.T?"⏳ Chưa xong":"Không có"}</span><b>${c.N}/${c.T}</b><span class="prog"><i style="width:${c.T?c.N*100/c.T:0}%"></i></span></summary><div class="ddp"><div class="mut">Hôm nay ${TD.date.split("-").reverse().join("/")} · ${sc} · ${c.L.length-c.pend.length}/${c.L.length} Line hoàn tất</div>${c.pend.length?`<div class="chips">${c.pend.map(x=>`<span class="chip">${esc(x.line)}${sel==="all"?" · "+(x.shift==="Night"?"Đêm":"Ngày"):""}<b>còn ${x.t-x.d}</b></span>`).join("")}</div>`:`<div class="mut" style="margin-top:6px">${c.T?"Tất cả Line đã điểm danh.":"Không có nhân viên ở ca này."}</div>`}</div></details>`;
+  $("dd").innerHTML=`<div class="seg2 sm">${seg}</div><details class="ddx"${was?" open":""}><summary title="Tình trạng điểm danh hôm nay (${sc})"><span class="pill ${c.ok?"p0":c.T?"p3":"p4"}">${c.ok?"✔ Xong":c.T?"⏳ Chưa xong":"Không có"}</span><b>${c.N}/${c.T}</b><span class="prog"><i style="width:${c.T?c.N*100/c.T:0}%"></i></span></summary><div class="ddp"><div class="mut">Hôm nay ${TD.date.split("-").reverse().join("/")} · ${sc} · ${c.L.length-c.pend.length}/${c.L.length} Line hoàn tất</div>${c.pend.length?`<div class="chips">${c.pend.map(x=>{ const nm=TD.staff.filter(e=>e.line===x.line&&e.shift===x.shift&&!e.today).map(e=>e.name); return `<button type="button" class="chip chl" data-ol="${esc(x.line)}|${x.shift}" title="Bấm để mở điểm danh Line ${esc(x.line)}, ${x.shift==="Night"?"ca đêm":"ca ngày"}: ${esc(nm.join(", "))}">${esc(x.line)}${sel==="all"?" · "+(x.shift==="Night"?"Đêm":"Ngày"):""}<b>còn ${x.t-x.d}</b><small>${esc(nm.slice(0,3).join(", "))}${nm.length>3?" +"+(nm.length-3):""}</small></button>`; }).join("")}</div>`:`<div class="mut" style="margin-top:6px">${c.T?"Tất cả Line đã điểm danh.":"Không có nhân viên ở ca này."}</div>`}</div></details>`;
 }
 /* Biểu đồ công nhân: chính thức (CT) / thời vụ (TV) và thâm niên (tính từ Ngày vào) */
 const TEN=[["Dưới 3 tháng",3],["3–6 tháng",6],["6–9 tháng",9],["9–12 tháng",12],["Trên 1 năm",1e9]], TCOL=["#16a34a","#2563eb","#f59e0b","#ef4444","#7c3aed"];
@@ -629,7 +630,7 @@ function renderMix(){
   mk("c5",{type:"doughnut",data:{labels:TEN.map((x,i)=>lab(x[0],cnt[i],t2)),datasets:[{data:cnt,backgroundColor:TCOL,borderWidth:3,borderColor:bd}]},options:opt});
   $("c5n").textContent="Tổng "+W.length+" công nhân"+(nj?" · "+nj+" người chưa có Ngày vào (không tính)":"");
 }
-$("dd").addEventListener("click",e=>{ const b=e.target.closest("[data-dsh]"); if(!b) return; try{ localStorage.setItem("dd_sh",b.dataset.dsh); }catch(x){} renderDone(); });
+$("dd").addEventListener("click",e=>{ const o=e.target.closest("[data-ol]"); if(o){ const [ln,sh]=o.dataset.ol.split("|"); window.openLine&&window.openLine(ln,sh); return; } const b=e.target.closest("[data-dsh]"); if(!b) return; try{ localStorage.setItem("dd_sh",b.dataset.dsh); }catch(x){} renderDone(); });
 document.addEventListener("click",e=>{ const d=document.querySelector(".ddx[open]"); if(d&&!d.contains(e.target)) d.open=false; });
 /* Quỹ phép theo tháng (Hồ sơ nhân sự) */
 async function loadLeave(){
@@ -919,6 +920,12 @@ $("shiftSeg").addEventListener("click",e=>{
   const b=e.target.closest("button[data-shift]"); if(!b) return;
   S.shift=b.dataset.shift; [...$("shiftSeg").children].forEach(x=>x.classList.toggle("on",x===b)); updateHint();
 });
+/* Từ ô "còn N" ở Tổng quan: mở thẳng điểm danh Line/ca đó, ngày hôm nay */
+window.openLine=(line,shift)=>{
+  if(!S.lines.some(l=>l.line===line)) return;
+  S.shift=shift==="Night"?"Night":"Day"; [...$("shiftSeg").children].forEach(x=>x.classList.toggle("on",x.dataset.shift===S.shift));
+  $("lineSel").value=line; $("dateIn").value=todayStr(); updateHint(); go("att"); openRoster();
+};
 store("att_id",null); show("login");
 
 })();
